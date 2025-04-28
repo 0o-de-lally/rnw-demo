@@ -2,6 +2,7 @@
 
 This project is a simple demonstration of a "Hello World" web page built using Bun as the toolchain and React Native Web as the framework.
 
+
 ## Project Structure
 
 ```

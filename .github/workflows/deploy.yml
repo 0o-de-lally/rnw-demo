@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+# Add permissions needed for GitHub Pages deployment
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest

@@ -9,7 +9,7 @@
     "testnet": "bun run scripts/background.js"
   },
   "dependencies": {
-    "open-libra-sdk": "^1.1.0",
+    "open-libra-sdk": "file:/Users/lucas/code/ts/libra-ts-sdk",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-native-web": "^0.18.0"

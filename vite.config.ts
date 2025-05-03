@@ -14,5 +14,6 @@ export default defineConfig({
   },
   build: {
     outDir: 'build'
-  }
+  },
+  base: '/rnw-demo/',
 });

@@ -20,4 +20,4 @@ jobs:
         run: bun install
 
       - name: Component test renders
-        run: bun vitest
+        run: bun run test

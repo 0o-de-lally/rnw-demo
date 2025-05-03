@@ -7,8 +7,7 @@
     "dev:testnet": "concurrently \"vite\" \"bun run scripts/background.js\"",
     "build": "vite build",
     "testnet": "bun run scripts/background.js",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "vitest"
   },
   "dependencies": {
     "open-libra-sdk": "1.1.1",

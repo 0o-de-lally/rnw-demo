@@ -2,23 +2,7 @@
 
 This project is a simple demonstration of a "Hello World" web page built using Bun as the toolchain and React Native Web as the framework.
 
-
-## Project Structure
-
-```
-bun-react-native-web-demo
-├── src
-│   ├── App.tsx          # Main application component
-│   ├── index.tsx       # Entry point of the application
-│   └── components
-│       └── HelloWorld.tsx # Component that displays "Hello, World!"
-├── public
-│   └── index.html      # HTML template for the application
-├── package.json        # npm configuration file
-├── tsconfig.json       # TypeScript configuration file
-├── bunfig.toml         # Bun configuration file
-└── README.md           # Project documentation
-```
+Uses Vitest and webdriver.io for component testing
 
 ## Getting Started
 

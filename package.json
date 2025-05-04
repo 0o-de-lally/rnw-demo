@@ -19,6 +19,7 @@
     "@vitejs/plugin-react": "^4.4.1",
     "@vitest/browser": "^3.1.2",
     "concurrently": "^9.1.2",
+    "docker-compose": "^1.2.0",
     "typescript": "^4.9.5",
     "vite": "^6.3.4",
     "vite-plugin-commonjs": "^0.10.4",

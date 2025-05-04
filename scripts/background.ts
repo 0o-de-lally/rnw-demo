@@ -1,4 +1,8 @@
-import { testnetUp, testnetDown, DOCKER_URL, LibraClient, Network } from 'open-libra-sdk';
+import { LibraClient, Network } from 'open-libra-sdk';
+// TODO: we should be using the docker testnet tools from
+// open-libra-sdk once we solve the path issues
+import { LOCAL_TESTNET_API, testnetUp, testnetDown } from '../src/local_testnet/compose';
+
 
 // Function to handle cleanup when the script is interrupted
 function setupShutdownHandler() {
@@ -23,17 +27,17 @@ async function main() {
 
     if (started) {
       console.log('✅ Local testnet is up and running!');
-      console.log(`API endpoint: ${DOCKER_URL}`);
+      console.log(`API endpoint: ${LOCAL_TESTNET_API}`);
 
       // Create a client connected to the local testnet
-      const client = new LibraClient(Network.TESTNET, DOCKER_URL);
+      const client = new LibraClient(Network.TESTNET, LOCAL_TESTNET_API);
 
       // Verify the connection by getting the ledger info
       const ledgerInfo = await client.getLedgerInfo();
       console.log('\nTestnet status:');
       console.log(`Chain ID: ${ledgerInfo.chain_id}`);
       console.log(`Blockchain version: ${ledgerInfo.block_height}`);
-      console.log(`Ledger timestamp: ${new Date(ledgerInfo.ledger_timestamp / 1000).toISOString()}`);
+      console.log(`Ledger timestamp: ${new Date(Number(ledgerInfo.ledger_timestamp) / 1000).toISOString()}`);
 
       console.log('\nTestnet is ready for testing. Press Ctrl+C to shut down.');
 

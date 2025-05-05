@@ -4,9 +4,12 @@ on:
   push:
     branches:
       - main
-
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - main
 jobs:
-  build:
+  test-component-render:
     runs-on: ubuntu-latest
 
     steps:

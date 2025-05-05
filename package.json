@@ -17,15 +17,16 @@
     "react-native-web": "^0.18.12"
   },
   "devDependencies": {
+    "@types/react-native": "^0.73.0",
     "@vitejs/plugin-react": "^4.4.1",
-    "@vitest/browser": "^3.1.2",
+    "@vitest/browser": "^3.1.3",
     "concurrently": "^9.1.2",
     "docker-compose": "^1.2.0",
     "typescript": "^4.9.5",
-    "vite": "^6.3.4",
+    "vite": "^6.3.5",
     "vite-plugin-commonjs": "^0.10.4",
     "vite-plugin-react-native-web": "^1.2.0",
-    "vitest": "^3.1.2",
+    "vitest": "^3.1.3",
     "vitest-browser-react": "^0.1.1",
     "webdriverio": "^9.12.7"
   }

@@ -1,7 +1,10 @@
 // Simple configuration module using build-time environment variables
 
+// Import polyfills before any other imports
+import './polyfills';
+
+// Import implementation from the browser bundle
 import { LibraClient, Network } from "open-libra-sdk";
-import { LOCAL_TESTNET_API } from "../local_testnet/compose";
 
 interface AppConfig {
   apiUrl: string,
@@ -10,21 +13,21 @@ interface AppConfig {
 }
 
 // Use build-time environment variables with fallbacks
-const BUILD_API_URL = import.meta?.env?.VITE_LIBRA_URL || process.env.REACT_APP_LIBRA_URL;
-const BUILD_NETWORK = import.meta?.env?.VITE_LIBRA_NETWORK || process.env.REACT_APP_LIBRA_NETWORK;
+const BUILD_API_URL = import.meta.env.VITE_LIBRA_URL || 'http://localhost:8380/v1';
+const BUILD_NETWORK = import.meta.env.VITE_LIBRA_NETWORK || 'TESTNET';
 
 let config: AppConfig;
 
 function setConfigOnBoot(): AppConfig {
-  // Default to use the local testnet URL or build-time provided URL
-  // development and tests should not run on production URLs
-  const apiUrl = BUILD_API_URL || LOCAL_TESTNET_API;
-
   // Determine network based on build environment variables
   const network = BUILD_NETWORK === 'MAINNET' ? Network.MAINNET : Network.TESTNET;
 
-  const client = new LibraClient(network, apiUrl);
-  return { apiUrl, client };
+  console.log(`Creating LibraClient with network=${network}, url=${BUILD_API_URL}`);
+
+  // The CORS headers are now handled by our custom fetch implementation in polyfills.ts
+  const client = new LibraClient(network, BUILD_API_URL);
+
+  return { apiUrl: BUILD_API_URL, client };
 }
 
 function getConfig(): AppConfig {

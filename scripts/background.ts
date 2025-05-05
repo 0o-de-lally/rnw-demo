@@ -1,7 +1,7 @@
 import { LibraClient, Network } from 'open-libra-sdk';
 // TODO: we should be using the docker testnet tools from
 // open-libra-sdk once we solve the path issues
-import { LOCAL_TESTNET_API, testnetUp, testnetDown } from '../src/local_testnet/compose';
+import { LOCAL_TESTNET_API, testnetUp, testnetDown } from '../local_testnet/compose';
 
 
 // Function to handle cleanup when the script is interrupted

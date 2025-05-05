@@ -22,8 +22,6 @@ export default defineConfig(configEnv => {
       setupFiles: ['./src/config/polyfills.ts'],
       // Add global setup file that runs before all tests
       globalSetup: './tests/setup/globalSetup.ts',
-      // Add global teardown file that runs after all tests
-      globalTeardown: './tests/setup/globalTeardown.ts',
       // Ensure environment variables are loaded
       environmentOptions: {
         env: process.env

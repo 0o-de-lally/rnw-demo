@@ -6,9 +6,9 @@
     "dev": "vite",
     "dev:testnet": "concurrently \"vite\" \"bun run scripts/background.js\"",
     "build": "vite build --mode prod",
-    "build:dev": "vite build --mode dev",
+    "build:dev": "vite build --mode development",
     "testnet": "bun run scripts/background.js",
-    "test": "vitest"
+    "test": "vitest --run"
   },
   "dependencies": {
     "open-libra-sdk": "1.1.1",

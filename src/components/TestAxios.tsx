@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { getConfig } from '../config/appConfig';
 import { styles } from '../styles';
 import axios from 'axios';
@@ -64,9 +64,9 @@ const TestAxios = () => {
       {data && (
         <>
           <Text style={styles.subtitle}>Response Data:</Text>
-          <ScrollView style={styles.jsonContainer}>
+          <View style={styles.jsonContainer}>
             <Text style={styles.jsonText}>{renderJson()}</Text>
-          </ScrollView>
+          </View>
         </>
       )}
     </View>

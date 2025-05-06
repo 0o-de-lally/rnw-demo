@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite --mode prod",
+    "dev": "vite",
     "dev:testnet": "concurrently \"vite\" \"bun run scripts/background.js\"",
     "build": "vite build --mode prod",
     "build:dev": "vite build --mode development",

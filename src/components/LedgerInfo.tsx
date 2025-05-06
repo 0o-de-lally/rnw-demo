@@ -30,9 +30,6 @@ const LedgerInfo: React.FC = () => {
             WITH_CREDENTIALS: false,
             HEADERS: {
               'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*',
-              'Access-Control-Allow-Methods': 'GET',
-              'Access-Control-Allow-Credentials': true
             },
           },
           network: Network.TESTNET,

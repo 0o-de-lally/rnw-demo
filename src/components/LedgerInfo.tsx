@@ -25,17 +25,18 @@ const LedgerInfo: React.FC = () => {
         const cfg = getConfig();
 
 
-        let settings: AptosSettings = {
-          clientConfig: {
-            WITH_CREDENTIALS: false,
-            HEADERS: {
-              'Content-Type': 'application/json',
-            },
-          },
-          network: Network.TESTNET,
-          fullnode: 'https://twin-rpc.openlibra.space',
-        };
-        let config = new Aptos (new AptosConfig(settings));
+        // let settings: AptosSettings = {
+        //   clientConfig: {
+        //     WITH_CREDENTIALS: false,
+        //     // HEADERS: {
+        //     //   'Content-Type': 'application/json',
+        //     // },
+        //   },
+        //   network: Network.TESTNET,
+        //   fullnode: cfg.apiUrl,
+        // };
+        // let config = new Aptos (new AptosConfig(settings));
+        let config = cfg.client;
 
         // Fetch ledger info
         console.log('Fetching ledger info...');

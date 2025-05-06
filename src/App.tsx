@@ -7,8 +7,7 @@ import TestApi from './components/TestApi';
 const App: React.FC = () => {
     return (
         <View style={styles.container}>
-            <HelloWorld />
-            {/* <LedgerInfo /> */}
+            <LedgerInfo />
             <TestApi />
         </View>
     );

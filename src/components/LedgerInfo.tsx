@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Text, View, ActivityIndicator } from "react-native";
 import { getConfig } from "../config/appConfig";
 import { styles } from "../styles";
-import { LedgerInfo  } from "open-libra-sdk";
+import { LedgerInfo } from "open-libra-sdk";
 
 interface LedgerInfoData {
   chain_id: number;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Text, View, ActivityIndicator } from "react-native";
 import { getConfig } from "../config/appConfig";
 import { styles } from "../styles";
-import { LedgerInfo } from "open-libra-sdk";
+import { LedgerInfo  } from "open-libra-sdk";
 
 interface LedgerInfoData {
   chain_id: number;
@@ -13,7 +13,7 @@ interface LedgerInfoData {
   // Add other fields as needed
 }
 
-const LedgerInfo: React.FC = () => {
+const LedgerInfoView: React.FC = () => {
   const [ledgerInfo, setLedgerInfo] = useState<LedgerInfoData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -88,4 +88,4 @@ const InfoRow: React.FC<{ label: string; value: string }> = ({
   </View>
 );
 
-export default LedgerInfo;
+export default LedgerInfoView;

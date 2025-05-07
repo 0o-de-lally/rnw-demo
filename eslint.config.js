@@ -16,7 +16,7 @@ export default [
       "coverage/**",
       "local_testnet/**",
       "*.lock",
-      "*.config*"
+      "*.config*",
     ],
     languageOptions: {
       parser: tsParser,
@@ -55,7 +55,6 @@ export default [
       ...reactPlugin.configs.recommended.rules,
       // React Hooks rules
       ...reactHooksPlugin.configs.recommended.rules,
-
     },
-  }
+  },
 ];

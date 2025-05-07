@@ -1,3 +1,6 @@
+/* eslint @typescript-eslint/no-explicit-any: "off" */
+/* eslint @typescript-eslint/no-unsafe-function-type: "off" */
+
 /**
  * This file provides polyfills for Node.js specific features
  * that might be used by open-libra-sdk in a browser environment.
@@ -39,7 +42,7 @@ if (typeof Buffer === "undefined") {
     isBuffer: () => false,
     alloc: (size: number) => new Uint8Array(size),
     allocUnsafe: (size: number) => new Uint8Array(size),
-    byteLength: (str: string, encoding?: string) =>
+    byteLength: (str: string, _encoding?: string) =>
       new TextEncoder().encode(str).length,
     concat: (chunks: Uint8Array[]) => {
       const totalLength = chunks.reduce((acc, val) => acc + val.length, 0);

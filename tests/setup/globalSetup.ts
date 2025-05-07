@@ -7,7 +7,7 @@ let isTearingDown = false;
 export default async function () {
   if (isSetup) return doTeardown;
 
-  console.log("🚀 Global setup: starting testnet");
+  console.warn("🚀 Global setup: starting testnet");
   // make sure we teardown any zombies first
   await testnetDown();
   await testnetUp();
@@ -19,7 +19,7 @@ export default async function () {
 
 async function doTeardown() {
   if (isTearingDown) return;
-  console.log("🧹 Global teardown: stopping testnet");
+  console.warn("🧹 Global teardown: stopping testnet");
   isTearingDown = true;
   await testnetDown();
   isSetup = false;

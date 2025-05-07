@@ -21,12 +21,8 @@ let config: AppConfig;
 
 function setConfigOnBoot(): AppConfig {
   // Determine network based on build environment variables
-  const network =
+  const network: Network =
     BUILD_NETWORK === "MAINNET" ? Network.MAINNET : Network.TESTNET;
-
-  console.log(
-    `Creating LibraClient with network=${network}, url=${BUILD_API_URL}`,
-  );
 
   // The CORS headers are now handled by our custom fetch implementation in polyfills.ts
   const client = new LibraClient(network, BUILD_API_URL);

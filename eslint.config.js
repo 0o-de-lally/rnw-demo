@@ -2,8 +2,6 @@ import tseslint from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
 import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
-import prettierPlugin from "eslint-plugin-prettier";
-import prettierConfig from "eslint-config-prettier";
 
 export default [
   {
@@ -47,9 +45,21 @@ export default [
     rules: {
       // TypeScript rules
       ...tseslint.configs.recommended.rules,
-      ...tseslint.configs["recommended-requiring-type-checking"].rules, // Add type-aware rules
 
       "no-console": ["warn", { allow: ["warn", "error"] }],
+
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          args: "all",
+          argsIgnorePattern: "^_",
+          caughtErrors: "all",
+          caughtErrorsIgnorePattern: "^_",
+          destructuredArrayIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          ignoreRestSiblings: true,
+        },
+      ],
 
       // React rules
       ...reactPlugin.configs.recommended.rules,

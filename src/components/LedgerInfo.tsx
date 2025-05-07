@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Text, View, ActivityIndicator } from "react-native";
 import { getConfig } from "../config/appConfig";
 import { styles } from "../styles";
+import { LedgerInfo } from "open-libra-sdk";
 
 interface LedgerInfoData {
   chain_id: number;
@@ -21,12 +22,10 @@ const LedgerInfo: React.FC = () => {
     const fetchLedgerInfo = async () => {
       try {
         // Get the client from the app config
-        const { client } = getConfig();
+        const cfg = getConfig();
 
         // Fetch ledger info
-        console.log("Fetching ledger info...");
-        const info = await client.getLedgerInfo();
-        console.log("Ledger info received:", info);
+        const info: LedgerInfo = await cfg.client.getLedgerInfo();
         setLedgerInfo(info);
         setLoading(false);
       } catch (err) {

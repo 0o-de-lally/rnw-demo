@@ -1,10 +1,10 @@
-import { testnetDown, testnetUp } from '../../local_testnet/compose';
+import { testnetDown, testnetUp } from "../../local_testnet/compose";
 
 // Setup once for parallelized tests
 let isSetup = false;
 let isTearingDown = false;
 
-export default async function() {
+export default async function () {
   if (isSetup) return doTeardown;
 
   console.log("🚀 Global setup: starting testnet");
@@ -14,7 +14,7 @@ export default async function() {
   isSetup = true;
 
   // You can set global state that will be visible to teardown
-  return doTeardown
+  return doTeardown;
 }
 
 async function doTeardown() {

@@ -1,14 +1,12 @@
-import { StyleSheet } from 'react-native';
-
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-
   container: {
     padding: 20,
     maxWidth: 800,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
     borderRadius: 8,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -16,38 +14,38 @@ export const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 12,
-    color: '#333',
+    color: "#333",
   },
   infoContainer: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 6,
     padding: 12,
   },
   infoRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingVertical: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: "#eee",
   },
   label: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     width: 140,
-    color: '#555',
+    color: "#555",
   },
   value: {
     flex: 1,
-    color: '#333',
+    color: "#333",
   },
   loadingText: {
     marginTop: 10,
-    color: '#666',
-    textAlign: 'center',
+    color: "#666",
+    textAlign: "center",
   },
   errorText: {
-    color: 'red',
-    fontWeight: 'bold',
+    color: "red",
+    fontWeight: "bold",
     marginBottom: 12,
-  }
+  },
 });

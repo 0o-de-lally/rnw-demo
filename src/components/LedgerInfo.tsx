@@ -23,25 +23,11 @@ const LedgerInfo: React.FC = () => {
       setError(null);
 
       // Get the client from the app config
-      const cfg = getConfig();
-
-      // //////// TO USE THE APTOS SDK
-      // let settings: AptosSettings = {
-      //   clientConfig: {
-      //     WITH_CREDENTIALS: false,
-      //     HEADERS: {
-      //       'barking-mad': 'application/json',
-      //       // 'Accept': 'application/json',
-      //     },
-      //   },
-      //   network: Network.MAINNET,
-      //   fullnode: cfg.apiUrl,
-      // };
-      // let config = new Aptos (new AptosConfig(settings));
+      const config = getConfig().client;
 
       // Fetch ledger info
       console.log('Fetching ledger info...');
-      const info = await cfg.client.getLedgerInfo();
+      const info = await config.getLedgerInfo();
       console.log('Ledger info received:', info);
       setLedgerInfo(info);
     } catch (err) {

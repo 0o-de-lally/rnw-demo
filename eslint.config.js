@@ -53,6 +53,8 @@ export default [
 
       // React rules
       ...reactPlugin.configs.recommended.rules,
+      "react/prop-types": "off", // Disable prop-types as we use TypeScript for type checking
+      "react/react-in-jsx-scope": "off", // Not needed with React 17+
       // React Hooks rules
       ...reactHooksPlugin.configs.recommended.rules,
     },

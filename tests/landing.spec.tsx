@@ -5,5 +5,5 @@ import App from '../src/App';
 test('can open app', async () => {
   const screen = render(<App />);
 
-  await expect.element(screen.getByText('Ledger')).toBeVisible()
+  await expect.element(screen.getByText('Explorer')).toBeVisible()
 })

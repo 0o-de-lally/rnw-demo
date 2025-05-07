@@ -1,15 +1,11 @@
 import { defineConfig, mergeConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react'
 import viteConfig from './vite.config'
 
 export default defineConfig(configEnv => {
   // Get the base Vite config
-  const baseConfig = typeof viteConfig === 'function'
-    ? viteConfig(configEnv)
-    : viteConfig
+  const baseConfig = viteConfig(configEnv);
 
   return mergeConfig(baseConfig, {
-    plugins: [react()],
     test: {
       environment: 'node',
       browser: {

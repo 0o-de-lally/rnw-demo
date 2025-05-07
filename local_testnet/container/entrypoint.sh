@@ -18,11 +18,14 @@ curl -sL https://github.com/0LNetworkCommunity/libra-framework/releases/download
 
 echo "Starting Libra node: $ME"
 export MODE_0L="TESTNET"
-libra ops genesis testnet --framework-mrb-path /usr/libra/framework/releases/head.mrb --me "$ME" --host-list alice:6180 --host-list bob:6180 --host-list carol:6180
+libra ops testnet --framework-mrb-path /usr/libra/framework/releases/head.mrb configure --host alice:6180 --host bob:6180 --host carol:6180 --test-dir $HOME/.libra
 
 # PATCH: open ports in node config
 echo "Opening ports in node config..."
-sed -i 's/127.0.0.1/0.0.0.0/g' $HOME/.libra/validator.yaml
+sed -i 's/127.0.0.1/0.0.0.0/g' $HOME/.libra/operator_files/$ME/validator.yaml
+
+echo "hack: moving the genesis folder to where it's expected"
+cp -r $HOME/.libra/genesis $HOME/.libra/operator_files/$ME/
 
 echo "Starting up the libra node..."
-RUST_LOG=INFO libra node
+RUST_LOG=INFO libra node -c $HOME/.libra/operator_files/$ME/validator.yaml

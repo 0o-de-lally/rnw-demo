@@ -9,7 +9,9 @@ export default defineConfig(configEnv => {
     : viteConfig
 
   return mergeConfig(baseConfig, {
-    plugins: [react()],
+    plugins: [
+      react(),
+    ],
     test: {
       environment: 'node',
       browser: {

@@ -9,12 +9,9 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [
-      react(),
+      react()
     ],
     resolve: {
-      alias: {
-        'react-native': 'react-native-web',
-      },
       extensions: ['.web.tsx', '.web.ts', '.tsx', '.ts', '.web.js', '.js']
     },
     build: {

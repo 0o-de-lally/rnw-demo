@@ -26,6 +26,7 @@ Uses Vitest and webdriver.io for component testing
    ```bash
    bun run dev
    ```
+
 5. You also need to be running a local testnet, which assumes you have docker installed.
    ```bash
    bun run testnet

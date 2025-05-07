@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View, ActivityIndicator } from 'react-native';
-import { getConfig } from '../config/appConfig';
-import {styles} from '../styles';
+import React, { useEffect, useState } from "react";
+import { Text, View, ActivityIndicator } from "react-native";
+import { getConfig } from "../config/appConfig";
+import { styles } from "../styles";
+import { LedgerInfo } from "open-libra-sdk";
 
 interface LedgerInfoData {
   chain_id: number;
@@ -18,21 +19,20 @@ const LedgerInfo: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-
     const fetchLedgerInfo = async () => {
       try {
         // Get the client from the app config
-        const { client } = getConfig();
+        const cfg = getConfig();
 
         // Fetch ledger info
-        console.log('Fetching ledger info...');
-        const info = await client.getLedgerInfo();
-        console.log('Ledger info received:', info);
+        const info: LedgerInfo = await cfg.client.getLedgerInfo();
         setLedgerInfo(info);
         setLoading(false);
       } catch (err) {
-        console.error('Error fetching ledger info:', err);
-        setError(`Failed to fetch ledger information: ${err instanceof Error ? err.message : String(err)}`);
+        console.error("Error fetching ledger info:", err);
+        setError(
+          `Failed to fetch ledger information: ${err instanceof Error ? err.message : String(err)}`,
+        );
         setLoading(false);
       }
     };
@@ -68,7 +68,9 @@ const LedgerInfo: React.FC = () => {
           <InfoRow label="Epoch" value={ledgerInfo.epoch} />
           <InfoRow
             label="Timestamp"
-            value={new Date(Number(ledgerInfo.ledger_timestamp) / 1000).toLocaleString()}
+            value={new Date(
+              Number(ledgerInfo.ledger_timestamp) / 1000,
+            ).toLocaleString()}
           />
         </View>
       )}
@@ -76,7 +78,10 @@ const LedgerInfo: React.FC = () => {
   );
 };
 
-const InfoRow: React.FC<{label: string; value: string}> = ({ label, value }) => (
+const InfoRow: React.FC<{ label: string; value: string }> = ({
+  label,
+  value,
+}) => (
   <View style={styles.infoRow}>
     <Text style={styles.label}>{label}:</Text>
     <Text style={styles.value}>{value}</Text>

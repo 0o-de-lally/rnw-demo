@@ -1,37 +1,34 @@
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig, loadEnv } from "vite";
 // import react from '@vitejs/plugin-react';
 import reactNativeWeb from "vite-plugin-react-native-web";
-import react from '@vitejs/plugin-react';
+import react from "@vitejs/plugin-react";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   // Load env file based on `mode` in the current directory.
   // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
-  loadEnv(mode, process.cwd(), '');
+  loadEnv(mode, process.cwd(), "");
 
   return {
-    plugins: [
-      react(),
-      reactNativeWeb()
-    ],
+    plugins: [react(), reactNativeWeb()],
     resolve: {
-      extensions: ['.web.tsx', '.web.ts', '.tsx', '.ts', '.web.js', '.js']
+      extensions: [".web.tsx", ".web.ts", ".tsx", ".ts", ".web.js", ".js"],
     },
     build: {
-      outDir: 'build'
+      outDir: "build",
     },
-    base: '/rnw-demo/',
+    base: "/rnw-demo/",
     optimizeDeps: {
       esbuildOptions: {
         // Node.js global to browser globalThis
         define: {
-          global: 'globalThis',
+          global: "globalThis",
         },
       },
     },
     // Keep global definition but allow environment variables
     define: {
-      global: 'window',
+      global: "window",
       // Do not override process.env with an empty object
     },
   };

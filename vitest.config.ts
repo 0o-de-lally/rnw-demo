@@ -25,6 +25,14 @@ export default defineConfig(configEnv => {
       // Ensure environment variables are loaded
       environmentOptions: {
         env: process.env
+      },
+      poolOptions: {
+        threads: {
+          // e2e tests should run in a single thread
+          // since there is a single docker testnet
+          // running at a time.
+          singleThread: true,
+        }
       }
     }
   })

@@ -1,9 +1,9 @@
 import { render } from "vitest-browser-react";
 import { expect, test } from "vitest";
-import App from "../src/App";
+import LedgerInfoView from "../src/components/LedgerInfo";
 
-test("ledger info", async () => {
-  const screen = render(<App />);
+test("ledger info test", async () => {
+  const screen = render(<LedgerInfoView />);
 
   await expect.element(screen.getByText("Chain ID")).toBeVisible();
 });

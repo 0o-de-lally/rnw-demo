@@ -17,6 +17,8 @@
     "fix": "eslint . --fix && prettier --write \"**/*.{js,jsx,ts,tsx,json}\""
   },
   "dependencies": {
+    "@react-navigation/native": "^7.1.9",
+    "@react-navigation/stack": "^7.3.2",
     "open-libra-sdk": "1.1.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

@@ -1,8 +1,9 @@
 // Helper functions to call Libra view functions using open-libra-sdk
+import { AccountAddress, addressFromString, MoveValue } from "open-libra-sdk";
 import { getConfig } from "../config/appConfig";
 
 export interface CommunityWallet {
-  address: string;
+  address: AccountAddress;
   isV8Authorized: boolean;
   isReauthProposed: boolean;
   balance: number;
@@ -12,7 +13,7 @@ export interface CommunityWallet {
  * Get the list of community wallets from the root registry
  * @returns Array of community wallet addresses
  */
-export async function getCommunityWallets(): Promise<string[]> {
+export async function getCommunityWallets(): Promise<AccountAddress[]> {
   try {
     const config = getConfig();
     const result = await config.client.viewJson({
@@ -23,8 +24,30 @@ export async function getCommunityWallets(): Promise<string[]> {
       }
     });
 
+    console.log("Community wallets result:", result);
     // The result should be an array of addresses
-    return result as string[];
+    let addrStrings: string[];
+
+    // Handle different possible return formats
+    if (Array.isArray(result[0])) {
+      addrStrings = result[0] as string[];
+    } else if (typeof result[0] === 'string') {
+      // Split comma-separated string if that's what's returned
+      addrStrings = result[0].split(',').map(addr => addr.trim());
+    } else {
+      // Try to get array from valueOf if it's an object with that method
+      const value = result[0]?.valueOf();
+      addrStrings = Array.isArray(value) ? value : [String(result[0])];
+    }
+
+    console.log("Community wallets addresses:", addrStrings);
+
+    let accList: AccountAddress[] = addrStrings.map((addr) => {
+      return addressFromString(addr) // Validate each address
+    });
+
+    return accList
+
   } catch (error) {
     console.error("Error fetching community wallets:", error);
     throw new Error(`Failed to fetch community wallets: ${error instanceof Error ? error.message : String(error)}`);
@@ -33,17 +56,17 @@ export async function getCommunityWallets(): Promise<string[]> {
 
 /**
  * Check if a community wallet is authorized for v8
- * @param walletAddress The address of the community wallet
+ * @param walletAddress The address of the community wallet as AccountAddress
  * @returns Boolean indicating if wallet is authorized for v8
  */
-export async function isWalletV8Authorized(walletAddress: string): Promise<boolean> {
+export async function isWalletV8Authorized(walletAddress: AccountAddress): Promise<boolean> {
   try {
     const config = getConfig();
     const result = await config.client.viewJson({
       payload: {
         function: "0x1::reauthorization::is_v8_authorized",
         typeArguments: [],
-        functionArguments: [walletAddress],
+        functionArguments: [walletAddress.toString()],
       }
     });
 
@@ -57,17 +80,17 @@ export async function isWalletV8Authorized(walletAddress: string): Promise<boole
 
 /**
  * Check if a reauthorization vote is underway for a community wallet
- * @param walletAddress The address of the community wallet
+ * @param walletAddress The address of the community wallet as AccountAddress
  * @returns Boolean indicating if reauthorization vote is underway
  */
-export async function isReauthProposed(walletAddress: string): Promise<boolean> {
+export async function isReauthProposed(walletAddress: AccountAddress): Promise<boolean> {
   try {
     const config = getConfig();
     const result = await config.client.viewJson({
       payload: {
         function: "0x1::donor_voice_governance::is_reauth_proposed",
         typeArguments: [],
-        functionArguments: [walletAddress],
+        functionArguments: [walletAddress.toString()],
       }
     });
 
@@ -81,17 +104,17 @@ export async function isReauthProposed(walletAddress: string): Promise<boolean> 
 
 /**
  * Get the balance of a community wallet
- * @param walletAddress The address of the community wallet
+ * @param walletAddress The address of the community wallet as AccountAddress
  * @returns The total balance of the wallet
  */
-export async function getWalletBalance(walletAddress: string): Promise<number> {
+export async function getWalletBalance(walletAddress: AccountAddress): Promise<number> {
   try {
     const config = getConfig();
     const result = await config.client.viewJson({
       payload: {
         function: "0x1::ol_account::balance",
         typeArguments: [],
-        functionArguments: [walletAddress],
+        functionArguments: [walletAddress.toString()],
       }
     });
 

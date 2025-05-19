@@ -9,36 +9,151 @@ import {
 } from "react-native";
 import { styles } from "../styles";
 import {
-  CommunityWallet,
-  fetchAllCommunityWalletData
+  getCommunityWallets,
+  isWalletV8Authorized,
+  isReauthProposed,
+  getWalletBalance
 } from "../utils/libraCalls";
+import { AccountAddress } from "open-libra-sdk";
 
 type SortKey = 'address' | 'isV8Authorized' | 'isReauthProposed' | 'balance';
 type SortDirection = 'asc' | 'desc';
 
+// Enhanced wallet type to handle loading states and errors for individual fields
+interface EnhancedWallet {
+  address: AccountAddress;
+  isV8Authorized: boolean | null;
+  isV8AuthorizedError?: string;
+  isV8AuthorizedLoading: boolean;
+  isReauthProposed: boolean | null;
+  isReauthProposedError?: string;
+  isReauthProposedLoading: boolean;
+  balance: number | null;
+  balanceError?: string;
+  balanceLoading: boolean;
+}
+
 const CommunityWalletList: React.FC = () => {
-  const [wallets, setWallets] = useState<CommunityWallet[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [addresses, setAddresses] = useState<AccountAddress[]>([]);
+  const [wallets, setWallets] = useState<EnhancedWallet[]>([]);
+  const [addressesLoading, setAddressesLoading] = useState<boolean>(true);
+  const [addressesError, setAddressesError] = useState<string | null>(null);
   const [sortKey, setSortKey] = useState<SortKey>('address');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
+  // Step 1: Fetch all wallet addresses
   useEffect(() => {
-    const loadData = async () => {
+    const loadAddresses = async () => {
       try {
-        setLoading(true);
-        const data = await fetchAllCommunityWalletData();
-        setWallets(data);
-        setLoading(false);
+        setAddressesLoading(true);
+        setAddressesError(null);
+
+        const addressList = await getCommunityWallets();
+
+        if (addressList.length === 0) {
+          setAddressesError("No community wallets found in the registry.");
+        } else {
+          setAddresses(addressList);
+          // Initialize wallet data with addresses only
+          const initialWallets = addressList.map(address => ({
+            address,
+            isV8Authorized: null,
+            isV8AuthorizedLoading: true,
+            isReauthProposed: null,
+            isReauthProposedLoading: true,
+            balance: null,
+            balanceLoading: true
+          }));
+          setWallets(initialWallets);
+        }
       } catch (err) {
-        console.error("Error loading community wallet data:", err);
-        setError(`Failed to load community wallet data: ${err instanceof Error ? err.message : String(err)}`);
-        setLoading(false);
+        console.error("Error loading community wallet addresses:", err);
+        setAddressesError(`Failed to load community wallets: ${err instanceof Error ? err.message : String(err)}`);
+      } finally {
+        setAddressesLoading(false);
       }
     };
 
-    loadData();
+    loadAddresses();
   }, []);
+
+  // Step 2: Once we have addresses, fetch additional data for each wallet
+  useEffect(() => {
+    if (addresses.length === 0) return;
+
+    // Load details for each wallet in parallel
+    addresses.forEach(async (address, index) => {
+      // Helper function to update a specific wallet's data
+      const updateWalletData = (
+        walletIndex: number,
+        field: keyof EnhancedWallet,
+        value: any,
+        errorField?: string,
+        error?: string
+      ) => {
+        setWallets(prevWallets => {
+          const updatedWallets = [...prevWallets];
+          updatedWallets[walletIndex] = {
+            ...updatedWallets[walletIndex],
+            [field]: value,
+            ...(errorField && error ? { [errorField]: error } : {})
+          };
+          return updatedWallets;
+        });
+      };
+
+      // Fetch v8 authorization status
+      try {
+        const isV8Auth = await isWalletV8Authorized(address);
+        updateWalletData(index, 'isV8Authorized', isV8Auth);
+      } catch (err) {
+        console.error(`Error checking v8 authorization for ${address}:`, err);
+        updateWalletData(
+          index,
+          'isV8Authorized',
+          null,
+          'isV8AuthorizedError',
+          String(err)
+        );
+      } finally {
+        updateWalletData(index, 'isV8AuthorizedLoading', false);
+      }
+
+      // Fetch reauthorization proposal status
+      try {
+        const isReauth = await isReauthProposed(address);
+        updateWalletData(index, 'isReauthProposed', isReauth);
+      } catch (err) {
+        console.error(`Error checking reauth proposal for ${address}:`, err);
+        updateWalletData(
+          index,
+          'isReauthProposed',
+          null,
+          'isReauthProposedError',
+          String(err)
+        );
+      } finally {
+        updateWalletData(index, 'isReauthProposedLoading', false);
+      }
+
+      // Fetch wallet balance
+      try {
+        const balance = await getWalletBalance(address);
+        updateWalletData(index, 'balance', balance);
+      } catch (err) {
+        console.error(`Error fetching balance for ${address}:`, err);
+        updateWalletData(
+          index,
+          'balance',
+          null,
+          'balanceError',
+          String(err)
+        );
+      } finally {
+        updateWalletData(index, 'balanceLoading', false);
+      }
+    });
+  }, [addresses]);
 
   // Handle sorting logic
   const handleSort = (key: SortKey) => {
@@ -61,16 +176,28 @@ const CommunityWalletList: React.FC = () => {
 
       switch (sortKey) {
         case 'address':
-          comparison = a.address.localeCompare(b.address);
+          comparison = a.address.toString().localeCompare(b.address.toString());
           break;
         case 'isV8Authorized':
-          comparison = Number(a.isV8Authorized) - Number(b.isV8Authorized);
+          // Handle null values during loading or errors
+          if (a.isV8Authorized === null && b.isV8Authorized === null) comparison = 0;
+          else if (a.isV8Authorized === null) comparison = -1;
+          else if (b.isV8Authorized === null) comparison = 1;
+          else comparison = Number(a.isV8Authorized) - Number(b.isV8Authorized);
           break;
         case 'isReauthProposed':
-          comparison = Number(a.isReauthProposed) - Number(b.isReauthProposed);
+          // Handle null values during loading or errors
+          if (a.isReauthProposed === null && b.isReauthProposed === null) comparison = 0;
+          else if (a.isReauthProposed === null) comparison = -1;
+          else if (b.isReauthProposed === null) comparison = 1;
+          else comparison = Number(a.isReauthProposed) - Number(b.isReauthProposed);
           break;
         case 'balance':
-          comparison = a.balance - b.balance;
+          // Handle null values during loading or errors
+          if (a.balance === null && b.balance === null) comparison = 0;
+          else if (a.balance === null) comparison = -1;
+          else if (b.balance === null) comparison = 1;
+          else comparison = a.balance - b.balance;
           break;
       }
 
@@ -119,25 +246,34 @@ const CommunityWalletList: React.FC = () => {
     </View>
   );
 
+  // Helper function to render cell content based on loading/error state
+  const renderCellContent = (value: any, isLoading: boolean, error?: string) => {
+    if (isLoading) return <ActivityIndicator size="small" color="#0088ff" />;
+    if (error || value === null) return <Text style={tableStyles.errorCell}>n/a</Text>;
+    if (typeof value === 'boolean') return <Text>{value ? 'Yes' : 'No'}</Text>;
+    if (typeof value === 'number') return <Text>{value.toLocaleString()}</Text>;
+    return <Text>{String(value)}</Text>;
+  };
+
   // Render each row in the table
-  const renderWalletRow = ({ item }: { item: CommunityWallet }) => (
+  const renderWalletRow = ({ item }: { item: EnhancedWallet }) => (
     <View style={tableStyles.row}>
       <Text style={tableStyles.addressCell} numberOfLines={1} ellipsizeMode="middle">
-        {item.address}
+        {item.address.toString()}
       </Text>
-      <Text style={tableStyles.cell}>
-        {item.isV8Authorized ? 'Yes' : 'No'}
-      </Text>
-      <Text style={tableStyles.cell}>
-        {item.isReauthProposed ? 'Yes' : 'No'}
-      </Text>
-      <Text style={tableStyles.cell}>
-        {item.balance.toLocaleString()}
-      </Text>
+      <View style={tableStyles.cell}>
+        {renderCellContent(item.isV8Authorized, item.isV8AuthorizedLoading, item.isV8AuthorizedError)}
+      </View>
+      <View style={tableStyles.cell}>
+        {renderCellContent(item.isReauthProposed, item.isReauthProposedLoading, item.isReauthProposedError)}
+      </View>
+      <View style={tableStyles.cell}>
+        {renderCellContent(item.balance, item.balanceLoading, item.balanceError)}
+      </View>
     </View>
   );
 
-  if (loading) {
+  if (addressesLoading) {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color="#0000ff" />
@@ -146,10 +282,10 @@ const CommunityWalletList: React.FC = () => {
     );
   }
 
-  if (error) {
+  if (addressesError) {
     return (
       <View style={styles.container}>
-        <Text style={styles.errorText}>{error}</Text>
+        <Text style={styles.errorText}>{addressesError}</Text>
       </View>
     );
   }
@@ -164,12 +300,12 @@ const CommunityWalletList: React.FC = () => {
         <FlatList
           data={sortedWallets}
           renderItem={renderWalletRow}
-          keyExtractor={(item) => item.address}
+          keyExtractor={(item) => item.address.toString()}
           style={tableStyles.list}
         />
       </View>
 
-      {wallets.length === 0 && !loading && !error && (
+      {wallets.length === 0 && !addressesLoading && !addressesError && (
         <Text style={styles.loadingText}>No community wallets found.</Text>
       )}
     </View>
@@ -204,13 +340,19 @@ const tableStyles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
     padding: 12,
+    alignItems: 'center',
   },
   cell: {
     flex: 1,
+    justifyContent: 'center',
   },
   addressCell: {
     flex: 1,
     fontFamily: 'monospace',
+  },
+  errorCell: {
+    color: '#888',
+    fontStyle: 'italic',
   },
   list: {
     maxHeight: 500, // Limit the height so it doesn't grow too large

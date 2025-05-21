@@ -23,11 +23,11 @@ const normalizedBasePath = basePath.replace(/^\/|\/$/g, "");
 
 // Configuration for URL-based navigation
 const linking: LinkingOptions<RootStackParamList> = {
-  prefixes: ["http://localhost:5173"],
+  prefixes: [], // Add an empty array to satisfy the type
   config: {
     initialRouteName: "Home",
     screens: {
-      Home: normalizedBasePath ? `${normalizedBasePath}/home` : "home",
+      Home: normalizedBasePath, // Root path maps to Home
       Details: normalizedBasePath ? `${normalizedBasePath}/details` : "details",
       NotFound: "*",
     },

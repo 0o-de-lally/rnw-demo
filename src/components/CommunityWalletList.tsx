@@ -83,70 +83,69 @@ const CommunityWalletList: React.FC = () => {
   useEffect(() => {
     if (addresses.length === 0) return;
 
+    // Helper function to update a specific wallet's data
+    const updateWalletDetailAtIndex = (
+      walletIndex: number,
+      updates: Partial<EnhancedWallet>,
+    ) => {
+      setWallets((prevWallets) => {
+        const newWallets = [...prevWallets];
+        // Ensure the wallet at walletIndex exists before trying to update
+        if (newWallets[walletIndex]) {
+          newWallets[walletIndex] = { ...newWallets[walletIndex], ...updates };
+        }
+        return newWallets;
+      });
+    };
+
     // Load details for each wallet in parallel
     addresses.forEach(async (address, index) => {
-      // Helper function to update a specific wallet's data
-      const updateWalletData = (
-        walletIndex: number,
-        field: keyof EnhancedWallet,
-        value: number,
-        errorField?: string,
-        error?: string,
-      ) => {
-        setWallets((prevWallets) => {
-          const updatedWallets = [...prevWallets];
-          updatedWallets[walletIndex] = {
-            ...updatedWallets[walletIndex],
-            [field]: value,
-            ...(errorField && error ? { [errorField]: error } : {}),
-          };
-          return updatedWallets;
-        });
-      };
-
       // Fetch v8 authorization status
       try {
         const isV8Auth = await isWalletV8Authorized(address);
-        updateWalletData(index, "isV8Authorized", isV8Auth);
+        updateWalletDetailAtIndex(index, {
+          isV8Authorized: isV8Auth,
+          isV8AuthorizedLoading: false,
+        });
       } catch (err) {
         console.error(`Error checking v8 authorization for ${address}:`, err);
-        updateWalletData(
-          index,
-          "isV8Authorized",
-          null,
-          "isV8AuthorizedError",
-          String(err),
-        );
-      } finally {
-        updateWalletData(index, "isV8AuthorizedLoading", false);
+        updateWalletDetailAtIndex(index, {
+          isV8Authorized: null,
+          isV8AuthorizedError: String(err),
+          isV8AuthorizedLoading: false,
+        });
       }
 
       // Fetch reauthorization proposal status
       try {
         const isReauth = await isReauthProposed(address);
-        updateWalletData(index, "isReauthProposed", isReauth);
+        updateWalletDetailAtIndex(index, {
+          isReauthProposed: isReauth,
+          isReauthProposedLoading: false,
+        });
       } catch (err) {
         console.error(`Error checking reauth proposal for ${address}:`, err);
-        updateWalletData(
-          index,
-          "isReauthProposed",
-          null,
-          "isReauthProposedError",
-          String(err),
-        );
-      } finally {
-        updateWalletData(index, "isReauthProposedLoading", false);
+        updateWalletDetailAtIndex(index, {
+          isReauthProposed: null,
+          isReauthProposedError: String(err),
+          isReauthProposedLoading: false,
+        });
       }
 
       // Fetch wallet balance
       try {
         const balance = await getWalletBalance(address);
-        updateWalletData(index, "balance", balance);
+        updateWalletDetailAtIndex(index, {
+          balance: balance,
+          balanceLoading: false,
+        });
       } catch (err) {
         console.error(`Error fetching balance for ${address}:`, err);
-        updateWalletData(index, "balance", null, "balanceError", String(err));
-      } finally {
-        updateWalletData(index, "balanceLoading", false);
+        updateWalletDetailAtIndex(index, {
+          balance: null,
+          balanceError: String(err),
+          balanceLoading: false,
+        });
       }
     });
   }, [addresses]);
@@ -205,6 +204,14 @@ const CommunityWalletList: React.FC = () => {
     });
   }, [wallets, sortKey, sortDirection]);
 
+  // Helper to get sort indicator string
+  const getSortIndicator = (key: SortKey): string => {
+    if (sortKey === key) {
+      return sortDirection === "asc" ? "↑" : "↓";
+    }
+    return "";
+  };
+
   // Render the table header with sort buttons
   const renderHeader = () => (
     <View style={tableStyles.headerRow}>
@@ -213,8 +220,7 @@ const CommunityWalletList: React.FC = () => {
         onPress={() => handleSort("address")}
       >
         <Text style={tableStyles.headerText}>
-          Address{" "}
-          {sortKey === "address" ? (sortDirection === "asc" ? "↑" : "↓") : ""}
+          Address {getSortIndicator("address")}
         </Text>
       </TouchableOpacity>
 
@@ -223,12 +229,7 @@ const CommunityWalletList: React.FC = () => {
         onPress={() => handleSort("isV8Authorized")}
       >
         <Text style={tableStyles.headerText}>
-          V8 Authorized{" "}
-          {sortKey === "isV8Authorized"
-            ? sortDirection === "asc"
-              ? "↑"
-              : "↓"
-            : ""}
+          V8 Authorized {getSortIndicator("isV8Authorized")}
         </Text>
       </TouchableOpacity>
 
@@ -237,12 +238,7 @@ const CommunityWalletList: React.FC = () => {
         onPress={() => handleSort("isReauthProposed")}
       >
         <Text style={tableStyles.headerText}>
-          Reauth Proposed{" "}
-          {sortKey === "isReauthProposed"
-            ? sortDirection === "asc"
-              ? "↑"
-              : "↓"
-            : ""}
+          Reauth Proposed {getSortIndicator("isReauthProposed")}
         </Text>
       </TouchableOpacity>
 
@@ -251,8 +247,7 @@ const CommunityWalletList: React.FC = () => {
         onPress={() => handleSort("balance")}
       >
         <Text style={tableStyles.headerText}>
-          Balance{" "}
-          {sortKey === "balance" ? (sortDirection === "asc" ? "↑" : "↓") : ""}
+          Balance {getSortIndicator("balance")}
         </Text>
       </TouchableOpacity>
     </View>
@@ -260,7 +255,7 @@ const CommunityWalletList: React.FC = () => {
 
   // Helper function to render cell content based on loading/error state
   const renderCellContent = (
-    value: number,
+    value: boolean | number | null,
     isLoading: boolean,
     error?: string,
   ) => {

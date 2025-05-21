@@ -13,7 +13,7 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Home Screen</Text>
-      <Text style={styles.subtitle}>URL path: "/"</Text>
+      <Text style={styles.subtitle}>URL path: /</Text>
       <LedgerInfoView />
 
       <Button

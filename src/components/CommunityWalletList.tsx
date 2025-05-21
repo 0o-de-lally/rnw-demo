@@ -87,7 +87,7 @@ const CommunityWalletList: React.FC = () => {
       const updateWalletData = (
         walletIndex: number,
         field: keyof EnhancedWallet,
-        value: any,
+        value: number,
         errorField?: string,
         error?: string
       ) => {
@@ -247,7 +247,7 @@ const CommunityWalletList: React.FC = () => {
   );
 
   // Helper function to render cell content based on loading/error state
-  const renderCellContent = (value: any, isLoading: boolean, error?: string) => {
+  const renderCellContent = (value: number, isLoading: boolean, error?: string) => {
     if (isLoading) return <ActivityIndicator size="small" color="#0088ff" />;
     if (error || value === null) return <Text style={tableStyles.errorCell}>n/a</Text>;
     if (typeof value === 'boolean') return <Text>{value ? 'Yes' : 'No'}</Text>;

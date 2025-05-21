@@ -14,7 +14,7 @@ const NotFoundScreen = () => {
       <Text style={styles.title}>404</Text>
       <Text style={styles.subtitle}>Page Not Found</Text>
       <Text style={styles.message}>
-        The page you're looking for doesn't exist or has been moved.
+        eek
       </Text>
       <TouchableOpacity
         style={styles.button}

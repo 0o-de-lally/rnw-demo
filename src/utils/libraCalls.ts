@@ -1,5 +1,5 @@
 // Helper functions to call Libra view functions using open-libra-sdk
-import { AccountAddress, addressFromString, MoveValue } from "open-libra-sdk";
+import { AccountAddress, addressFromString } from "open-libra-sdk";
 import { getConfig } from "../config/appConfig";
 
 export interface CommunityWallet {
@@ -24,7 +24,6 @@ export async function getCommunityWallets(): Promise<AccountAddress[]> {
       }
     });
 
-    console.log("Community wallets result:", result);
     // The result should be an array of addresses
     let addrStrings: string[];
 
@@ -39,8 +38,6 @@ export async function getCommunityWallets(): Promise<AccountAddress[]> {
       const value = result[0]?.valueOf();
       addrStrings = Array.isArray(value) ? value : [String(result[0])];
     }
-
-    console.log("Community wallets addresses:", addrStrings);
 
     let accList: AccountAddress[] = addrStrings.map((addr) => {
       return addressFromString(addr) // Validate each address

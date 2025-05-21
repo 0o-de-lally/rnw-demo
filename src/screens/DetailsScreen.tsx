@@ -12,7 +12,7 @@ const DetailsScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Details Screen</Text>
-      <Text style={styles.subtitle}>URL path: "/details"</Text>
+      <Text style={styles.subtitle}>URL path: /details</Text>
       <Button
         title="Go back to Home"
         onPress={() => navigation.navigate('Home')}

@@ -5,19 +5,19 @@ import {
   ActivityIndicator,
   FlatList,
   TouchableOpacity,
-  StyleSheet
+  StyleSheet,
 } from "react-native";
 import { styles } from "../styles";
 import {
   getCommunityWallets,
   isWalletV8Authorized,
   isReauthProposed,
-  getWalletBalance
+  getWalletBalance,
 } from "../utils/libraCalls";
 import { AccountAddress } from "open-libra-sdk";
 
-type SortKey = 'address' | 'isV8Authorized' | 'isReauthProposed' | 'balance';
-type SortDirection = 'asc' | 'desc';
+type SortKey = "address" | "isV8Authorized" | "isReauthProposed" | "balance";
+type SortDirection = "asc" | "desc";
 
 // Enhanced wallet type to handle loading states and errors for individual fields
 interface EnhancedWallet {
@@ -38,8 +38,8 @@ const CommunityWalletList: React.FC = () => {
   const [wallets, setWallets] = useState<EnhancedWallet[]>([]);
   const [addressesLoading, setAddressesLoading] = useState<boolean>(true);
   const [addressesError, setAddressesError] = useState<string | null>(null);
-  const [sortKey, setSortKey] = useState<SortKey>('address');
-  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+  const [sortKey, setSortKey] = useState<SortKey>("address");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
 
   // Step 1: Fetch all wallet addresses
   useEffect(() => {
@@ -55,20 +55,22 @@ const CommunityWalletList: React.FC = () => {
         } else {
           setAddresses(addressList);
           // Initialize wallet data with addresses only
-          const initialWallets = addressList.map(address => ({
+          const initialWallets = addressList.map((address) => ({
             address,
             isV8Authorized: null,
             isV8AuthorizedLoading: true,
             isReauthProposed: null,
             isReauthProposedLoading: true,
             balance: null,
-            balanceLoading: true
+            balanceLoading: true,
           }));
           setWallets(initialWallets);
         }
       } catch (err) {
         console.error("Error loading community wallet addresses:", err);
-        setAddressesError(`Failed to load community wallets: ${err instanceof Error ? err.message : String(err)}`);
+        setAddressesError(
+          `Failed to load community wallets: ${err instanceof Error ? err.message : String(err)}`,
+        );
       } finally {
         setAddressesLoading(false);
       }
@@ -89,14 +91,14 @@ const CommunityWalletList: React.FC = () => {
         field: keyof EnhancedWallet,
         value: number,
         errorField?: string,
-        error?: string
+        error?: string,
       ) => {
-        setWallets(prevWallets => {
+        setWallets((prevWallets) => {
           const updatedWallets = [...prevWallets];
           updatedWallets[walletIndex] = {
             ...updatedWallets[walletIndex],
             [field]: value,
-            ...(errorField && error ? { [errorField]: error } : {})
+            ...(errorField && error ? { [errorField]: error } : {}),
           };
           return updatedWallets;
         });
@@ -105,52 +107,46 @@ const CommunityWalletList: React.FC = () => {
       // Fetch v8 authorization status
       try {
         const isV8Auth = await isWalletV8Authorized(address);
-        updateWalletData(index, 'isV8Authorized', isV8Auth);
+        updateWalletData(index, "isV8Authorized", isV8Auth);
       } catch (err) {
         console.error(`Error checking v8 authorization for ${address}:`, err);
         updateWalletData(
           index,
-          'isV8Authorized',
+          "isV8Authorized",
           null,
-          'isV8AuthorizedError',
-          String(err)
+          "isV8AuthorizedError",
+          String(err),
         );
       } finally {
-        updateWalletData(index, 'isV8AuthorizedLoading', false);
+        updateWalletData(index, "isV8AuthorizedLoading", false);
       }
 
       // Fetch reauthorization proposal status
       try {
         const isReauth = await isReauthProposed(address);
-        updateWalletData(index, 'isReauthProposed', isReauth);
+        updateWalletData(index, "isReauthProposed", isReauth);
       } catch (err) {
         console.error(`Error checking reauth proposal for ${address}:`, err);
         updateWalletData(
           index,
-          'isReauthProposed',
+          "isReauthProposed",
           null,
-          'isReauthProposedError',
-          String(err)
+          "isReauthProposedError",
+          String(err),
         );
       } finally {
-        updateWalletData(index, 'isReauthProposedLoading', false);
+        updateWalletData(index, "isReauthProposedLoading", false);
       }
 
       // Fetch wallet balance
       try {
         const balance = await getWalletBalance(address);
-        updateWalletData(index, 'balance', balance);
+        updateWalletData(index, "balance", balance);
       } catch (err) {
         console.error(`Error fetching balance for ${address}:`, err);
-        updateWalletData(
-          index,
-          'balance',
-          null,
-          'balanceError',
-          String(err)
-        );
+        updateWalletData(index, "balance", null, "balanceError", String(err));
       } finally {
-        updateWalletData(index, 'balanceLoading', false);
+        updateWalletData(index, "balanceLoading", false);
       }
     });
   }, [addresses]);
@@ -159,11 +155,11 @@ const CommunityWalletList: React.FC = () => {
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
       // Toggle direction if clicking the same column
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
       // Default to ascending when changing columns
       setSortKey(key);
-      setSortDirection('asc');
+      setSortDirection("asc");
     }
   };
 
@@ -175,24 +171,28 @@ const CommunityWalletList: React.FC = () => {
       let comparison = 0;
 
       switch (sortKey) {
-        case 'address':
+        case "address":
           comparison = a.address.toString().localeCompare(b.address.toString());
           break;
-        case 'isV8Authorized':
+        case "isV8Authorized":
           // Handle null values during loading or errors
-          if (a.isV8Authorized === null && b.isV8Authorized === null) comparison = 0;
+          if (a.isV8Authorized === null && b.isV8Authorized === null)
+            comparison = 0;
           else if (a.isV8Authorized === null) comparison = -1;
           else if (b.isV8Authorized === null) comparison = 1;
           else comparison = Number(a.isV8Authorized) - Number(b.isV8Authorized);
           break;
-        case 'isReauthProposed':
+        case "isReauthProposed":
           // Handle null values during loading or errors
-          if (a.isReauthProposed === null && b.isReauthProposed === null) comparison = 0;
+          if (a.isReauthProposed === null && b.isReauthProposed === null)
+            comparison = 0;
           else if (a.isReauthProposed === null) comparison = -1;
           else if (b.isReauthProposed === null) comparison = 1;
-          else comparison = Number(a.isReauthProposed) - Number(b.isReauthProposed);
+          else
+            comparison =
+              Number(a.isReauthProposed) - Number(b.isReauthProposed);
           break;
-        case 'balance':
+        case "balance":
           // Handle null values during loading or errors
           if (a.balance === null && b.balance === null) comparison = 0;
           else if (a.balance === null) comparison = -1;
@@ -201,7 +201,7 @@ const CommunityWalletList: React.FC = () => {
           break;
       }
 
-      return sortDirection === 'asc' ? comparison : -comparison;
+      return sortDirection === "asc" ? comparison : -comparison;
     });
   }, [wallets, sortKey, sortDirection]);
 
@@ -210,65 +210,98 @@ const CommunityWalletList: React.FC = () => {
     <View style={tableStyles.headerRow}>
       <TouchableOpacity
         style={tableStyles.headerCell}
-        onPress={() => handleSort('address')}
+        onPress={() => handleSort("address")}
       >
         <Text style={tableStyles.headerText}>
-          Address {sortKey === 'address' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+          Address{" "}
+          {sortKey === "address" ? (sortDirection === "asc" ? "↑" : "↓") : ""}
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={tableStyles.headerCell}
-        onPress={() => handleSort('isV8Authorized')}
+        onPress={() => handleSort("isV8Authorized")}
       >
         <Text style={tableStyles.headerText}>
-          V8 Authorized {sortKey === 'isV8Authorized' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+          V8 Authorized{" "}
+          {sortKey === "isV8Authorized"
+            ? sortDirection === "asc"
+              ? "↑"
+              : "↓"
+            : ""}
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={tableStyles.headerCell}
-        onPress={() => handleSort('isReauthProposed')}
+        onPress={() => handleSort("isReauthProposed")}
       >
         <Text style={tableStyles.headerText}>
-          Reauth Proposed {sortKey === 'isReauthProposed' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+          Reauth Proposed{" "}
+          {sortKey === "isReauthProposed"
+            ? sortDirection === "asc"
+              ? "↑"
+              : "↓"
+            : ""}
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={tableStyles.headerCell}
-        onPress={() => handleSort('balance')}
+        onPress={() => handleSort("balance")}
       >
         <Text style={tableStyles.headerText}>
-          Balance {sortKey === 'balance' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+          Balance{" "}
+          {sortKey === "balance" ? (sortDirection === "asc" ? "↑" : "↓") : ""}
         </Text>
       </TouchableOpacity>
     </View>
   );
 
   // Helper function to render cell content based on loading/error state
-  const renderCellContent = (value: number, isLoading: boolean, error?: string) => {
+  const renderCellContent = (
+    value: number,
+    isLoading: boolean,
+    error?: string,
+  ) => {
     if (isLoading) return <ActivityIndicator size="small" color="#0088ff" />;
-    if (error || value === null) return <Text style={tableStyles.errorCell}>n/a</Text>;
-    if (typeof value === 'boolean') return <Text>{value ? 'Yes' : 'No'}</Text>;
-    if (typeof value === 'number') return <Text>{value.toLocaleString()}</Text>;
+    if (error || value === null)
+      return <Text style={tableStyles.errorCell}>n/a</Text>;
+    if (typeof value === "boolean") return <Text>{value ? "Yes" : "No"}</Text>;
+    if (typeof value === "number") return <Text>{value.toLocaleString()}</Text>;
     return <Text>{String(value)}</Text>;
   };
 
   // Render each row in the table
   const renderWalletRow = ({ item }: { item: EnhancedWallet }) => (
     <View style={tableStyles.row}>
-      <Text style={tableStyles.addressCell} numberOfLines={1} ellipsizeMode="middle">
+      <Text
+        style={tableStyles.addressCell}
+        numberOfLines={1}
+        ellipsizeMode="middle"
+      >
         {item.address.toString()}
       </Text>
       <View style={tableStyles.cell}>
-        {renderCellContent(item.isV8Authorized, item.isV8AuthorizedLoading, item.isV8AuthorizedError)}
+        {renderCellContent(
+          item.isV8Authorized,
+          item.isV8AuthorizedLoading,
+          item.isV8AuthorizedError,
+        )}
       </View>
       <View style={tableStyles.cell}>
-        {renderCellContent(item.isReauthProposed, item.isReauthProposedLoading, item.isReauthProposedError)}
+        {renderCellContent(
+          item.isReauthProposed,
+          item.isReauthProposedLoading,
+          item.isReauthProposedError,
+        )}
       </View>
       <View style={tableStyles.cell}>
-        {renderCellContent(item.balance, item.balanceLoading, item.balanceError)}
+        {renderCellContent(
+          item.balance,
+          item.balanceLoading,
+          item.balanceError,
+        )}
       </View>
     </View>
   );
@@ -315,16 +348,16 @@ const CommunityWalletList: React.FC = () => {
 // Additional styles specific to the table component
 const tableStyles = StyleSheet.create({
   table: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 6,
-    overflow: 'hidden',
+    overflow: "hidden",
     marginTop: 10,
   },
   headerRow: {
-    flexDirection: 'row',
-    backgroundColor: '#f0f0f0',
+    flexDirection: "row",
+    backgroundColor: "#f0f0f0",
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: "#ddd",
     padding: 12,
   },
   headerCell: {
@@ -332,27 +365,27 @@ const tableStyles = StyleSheet.create({
     paddingVertical: 8,
   },
   headerText: {
-    fontWeight: 'bold',
-    color: '#444',
+    fontWeight: "bold",
+    color: "#444",
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: "#eee",
     padding: 12,
-    alignItems: 'center',
+    alignItems: "center",
   },
   cell: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   addressCell: {
     flex: 1,
-    fontFamily: 'monospace',
+    fontFamily: "monospace",
   },
   errorCell: {
-    color: '#888',
-    fontStyle: 'italic',
+    color: "#888",
+    fontStyle: "italic",
   },
   list: {
     maxHeight: 500, // Limit the height so it doesn't grow too large

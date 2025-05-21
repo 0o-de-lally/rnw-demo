@@ -21,7 +21,7 @@ export async function getCommunityWallets(): Promise<AccountAddress[]> {
         function: "0x1::donor_voice::get_root_registry",
         typeArguments: [],
         functionArguments: [],
-      }
+      },
     });
 
     // The result should be an array of addresses
@@ -30,9 +30,9 @@ export async function getCommunityWallets(): Promise<AccountAddress[]> {
     // Handle different possible return formats
     if (Array.isArray(result[0])) {
       addrStrings = result[0] as string[];
-    } else if (typeof result[0] === 'string') {
+    } else if (typeof result[0] === "string") {
       // Split comma-separated string if that's what's returned
-      addrStrings = result[0].split(',').map(addr => addr.trim());
+      addrStrings = result[0].split(",").map((addr) => addr.trim());
     } else {
       // Try to get array from valueOf if it's an object with that method
       const value = result[0]?.valueOf();
@@ -40,14 +40,15 @@ export async function getCommunityWallets(): Promise<AccountAddress[]> {
     }
 
     let accList: AccountAddress[] = addrStrings.map((addr) => {
-      return addressFromString(addr) // Validate each address
+      return addressFromString(addr); // Validate each address
     });
 
-    return accList
-
+    return accList;
   } catch (error) {
     console.error("Error fetching community wallets:", error);
-    throw new Error(`Failed to fetch community wallets: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to fetch community wallets: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }
 
@@ -56,7 +57,9 @@ export async function getCommunityWallets(): Promise<AccountAddress[]> {
  * @param walletAddress The address of the community wallet as AccountAddress
  * @returns Boolean indicating if wallet is authorized for v8
  */
-export async function isWalletV8Authorized(walletAddress: AccountAddress): Promise<boolean> {
+export async function isWalletV8Authorized(
+  walletAddress: AccountAddress,
+): Promise<boolean> {
   try {
     const config = getConfig();
     const result = await config.client.viewJson({
@@ -64,14 +67,19 @@ export async function isWalletV8Authorized(walletAddress: AccountAddress): Promi
         function: "0x1::reauthorization::is_v8_authorized",
         typeArguments: [],
         functionArguments: [walletAddress.toString()],
-      }
+      },
     });
 
     // The MoveValue[] array contains the result at first position
     return result[0] as boolean;
   } catch (error) {
-    console.error(`Error checking v8 authorization for ${walletAddress}:`, error);
-    throw new Error(`Failed to check v8 authorization: ${error instanceof Error ? error.message : String(error)}`);
+    console.error(
+      `Error checking v8 authorization for ${walletAddress}:`,
+      error,
+    );
+    throw new Error(
+      `Failed to check v8 authorization: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }
 
@@ -80,7 +88,9 @@ export async function isWalletV8Authorized(walletAddress: AccountAddress): Promi
  * @param walletAddress The address of the community wallet as AccountAddress
  * @returns Boolean indicating if reauthorization vote is underway
  */
-export async function isReauthProposed(walletAddress: AccountAddress): Promise<boolean> {
+export async function isReauthProposed(
+  walletAddress: AccountAddress,
+): Promise<boolean> {
   try {
     const config = getConfig();
     const result = await config.client.viewJson({
@@ -88,14 +98,19 @@ export async function isReauthProposed(walletAddress: AccountAddress): Promise<b
         function: "0x1::donor_voice_governance::is_reauth_proposed",
         typeArguments: [],
         functionArguments: [walletAddress.toString()],
-      }
+      },
     });
 
     // The MoveValue[] array contains the result at first position
     return result[0] as boolean;
   } catch (error) {
-    console.error(`Error checking reauth proposal for ${walletAddress}:`, error);
-    throw new Error(`Failed to check reauth proposal: ${error instanceof Error ? error.message : String(error)}`);
+    console.error(
+      `Error checking reauth proposal for ${walletAddress}:`,
+      error,
+    );
+    throw new Error(
+      `Failed to check reauth proposal: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }
 
@@ -104,7 +119,9 @@ export async function isReauthProposed(walletAddress: AccountAddress): Promise<b
  * @param walletAddress The address of the community wallet as AccountAddress
  * @returns The total balance of the wallet
  */
-export async function getWalletBalance(walletAddress: AccountAddress): Promise<number> {
+export async function getWalletBalance(
+  walletAddress: AccountAddress,
+): Promise<number> {
   try {
     const config = getConfig();
     const result = await config.client.viewJson({
@@ -112,7 +129,7 @@ export async function getWalletBalance(walletAddress: AccountAddress): Promise<n
         function: "0x1::ol_account::balance",
         typeArguments: [],
         functionArguments: [walletAddress.toString()],
-      }
+      },
     });
 
     // The result is an array of two numbers: [unlockedBalance, totalBalance]
@@ -120,7 +137,9 @@ export async function getWalletBalance(walletAddress: AccountAddress): Promise<n
     return balanceArray[1]; // Return the total balance
   } catch (error) {
     console.error(`Error fetching balance for ${walletAddress}:`, error);
-    throw new Error(`Failed to fetch wallet balance: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to fetch wallet balance: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }
 
@@ -128,7 +147,9 @@ export async function getWalletBalance(walletAddress: AccountAddress): Promise<n
  * Fetch all data for all community wallets
  * @returns Array of CommunityWallet objects with complete information
  */
-export async function fetchAllCommunityWalletData(): Promise<CommunityWallet[]> {
+export async function fetchAllCommunityWalletData(): Promise<
+  CommunityWallet[]
+> {
   try {
     // First get all wallet addresses
     const walletAddresses = await getCommunityWallets();
@@ -166,6 +187,8 @@ export async function fetchAllCommunityWalletData(): Promise<CommunityWallet[]> 
     return walletData;
   } catch (error) {
     console.error("Error fetching all community wallet data:", error);
-    throw new Error(`Failed to fetch community wallet data: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to fetch community wallet data: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }

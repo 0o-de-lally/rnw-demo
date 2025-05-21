@@ -1,6 +1,7 @@
 This component will show a table
 The table should be sortable.
 The tables columns include:
+
 1. string, address of community wallet
 2. bool, if it is authorized for v8
 3. bool, if a reauthorization vote is underway
@@ -18,7 +19,7 @@ Whether or not the community wallet is authorized for v8 can be found at
 `0x1::reauthorization::is_v8_authorized` with one argument: of the community wallet address
 
 #3
-`0x1::donor_voice_governance::is_reauth_proposed`  with one argument: of the community wallet address
+`0x1::donor_voice_governance::is_reauth_proposed` with one argument: of the community wallet address
 
 #4
 THe balance can be found with

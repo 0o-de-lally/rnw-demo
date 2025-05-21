@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: "build",
     },
-    base: "/rnw-demo/",
+    base: "/rnw-demo",
     optimizeDeps: {
       esbuildOptions: {
         // Node.js global to browser globalThis

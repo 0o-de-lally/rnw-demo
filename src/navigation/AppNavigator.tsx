@@ -23,13 +23,13 @@ const normalizedBasePath = basePath.replace(/^\/|\/$/g, "");
 
 // Configuration for URL-based navigation
 const linking: LinkingOptions<RootStackParamList> = {
-  prefixes: [], // Add an empty array to satisfy the type
+  prefixes: [], // React Navigation uses the current origin for web
   config: {
     initialRouteName: "Home",
     screens: {
-      Home: normalizedBasePath, // Root path maps to Home
-      Details: normalizedBasePath ? `${normalizedBasePath}/details` : "details",
-      NotFound: "*",
+      Home: normalizedBasePath, // e.g., "" for local, "rnw-demo" for deployed
+      Details: normalizedBasePath ? `${normalizedBasePath}/details` : "details", // e.g., "details" for local, "rnw-demo/details" for deployed
+      NotFound: "*", // Catch-all for paths not found
     },
   },
 };

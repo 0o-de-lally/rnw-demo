@@ -16,6 +16,8 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       outDir: "build",
+      commonjsOptions: { transformMixedEsModules: true }
+
     },
     base: "/rnw-demo",
     optimizeDeps: {

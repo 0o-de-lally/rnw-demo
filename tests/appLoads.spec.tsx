@@ -3,7 +3,6 @@ import { expect, test } from "vitest";
 import App from "../src/App";
 
 test("can open app", async () => {
-
   // force history to start at root
   window.history.pushState({}, "Test", "/");
   const screen = render(<App />);

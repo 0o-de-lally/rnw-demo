@@ -1,18 +1,26 @@
 import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
-import { useNavigate } from "react-router-dom";
+import { View, Text, StyleSheet } from "react-native";
+import { Link } from "react-router-dom";
+
 import LedgerInfoView from "../components/LedgerInfo";
 
 const HomeScreen = () => {
-  const navigate = useNavigate();
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Explorer</Text>
       <Text style={styles.subtitle}>URL path: /</Text>
       <LedgerInfoView />
 
-      <Button title="Go to Details" onPress={() => navigate("/details")} />
+      <Link
+        to="/details"
+        style={{
+          textDecorationLine: "underline",
+          color: "#007AFF",
+          marginTop: 16,
+        }}
+      >
+        <Text>Go to Details</Text>
+      </Link>
     </View>
   );
 };

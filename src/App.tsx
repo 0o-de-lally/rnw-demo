@@ -4,21 +4,14 @@ import HomeScreen from "./screens/HomeScreen";
 import DetailsScreen from "./screens/DetailsScreen";
 import NotFoundScreen from "./screens/NotFoundScreen";
 import { USE_HASH_ROUTER } from "./config/routerMode";
+import Debug from "./components/Debug";
 
-// Normalize basePath to remove trailing slash for Router basename
 const basePath = (import.meta.env.BASE_URL || "/");
 const RouterComponent = USE_HASH_ROUTER ? HashRouter : BrowserRouter;
 
 export default function App() {
   return (
     <>
-      {/* Debug info always visible for troubleshooting */}
-      <div style={{ position: "fixed", top: 0, left: 0, background: "#eee", zIndex: 9999, fontSize: 12, padding: 4 }}>
-        <div>BASE_PATH: <b>{basePath}</b></div>
-        <div>window.location.pathname: <b>{window.location.pathname}</b></div>
-        <div>window.location.href: <b>{window.location.href}</b></div>
-        <div>USE_HASH_ROUTER: <b>{USE_HASH_ROUTER ? "true" : "false"}</b></div>
-      </div>
       {USE_HASH_ROUTER ? (
         <HashRouter>
           <Routes>
@@ -36,6 +29,7 @@ export default function App() {
           </Routes>
         </BrowserRouter>
       )}
+      <Debug />
     </>
   );
 }

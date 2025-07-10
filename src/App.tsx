@@ -6,8 +6,7 @@ import NotFoundScreen from "./screens/NotFoundScreen";
 import { USE_HASH_ROUTER } from "./config/routerMode";
 import Debug from "./components/Debug";
 
-const basePath = (import.meta.env.BASE_URL || "/");
-const RouterComponent = USE_HASH_ROUTER ? HashRouter : BrowserRouter;
+const basePath = import.meta.env.BASE_URL || "/";
 
 export default function App() {
   return (

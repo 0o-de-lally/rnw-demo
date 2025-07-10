@@ -3,7 +3,6 @@ import { View, Text, Button, StyleSheet } from "react-native";
 import { useNavigate } from "react-router-dom";
 import LedgerInfoView from "../components/LedgerInfo";
 
-
 const HomeScreen = () => {
   const navigate = useNavigate();
 
@@ -13,10 +12,7 @@ const HomeScreen = () => {
       <Text style={styles.subtitle}>URL path: /</Text>
       <LedgerInfoView />
 
-      <Button
-        title="Go to Details"
-        onPress={() => navigate("/details")}
-      />
+      <Button title="Go to Details" onPress={() => navigate("/details")} />
     </View>
   );
 };

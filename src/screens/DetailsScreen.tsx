@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 import { useNavigate } from "react-router-dom";
 
-
 const DetailsScreen = () => {
   const navigate = useNavigate();
 
@@ -10,10 +9,7 @@ const DetailsScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Details Screen</Text>
       <Text style={styles.subtitle}>URL path: /details</Text>
-      <Button
-        title="Go back to Home"
-        onPress={() => navigate("/")}
-      />
+      <Button title="Go back to Home" onPress={() => navigate("/")} />
     </View>
   );
 };

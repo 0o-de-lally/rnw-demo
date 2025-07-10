@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigate } from "react-router-dom";
 
-
 const NotFoundScreen = () => {
   const navigate = useNavigate();
 
@@ -21,10 +20,7 @@ const NotFoundScreen = () => {
       <Text style={styles.title}>404</Text>
       <Text style={styles.subtitle}>Page Not Found</Text>
       <Text style={styles.message}>eek</Text>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigate("/")}
-      >
+      <TouchableOpacity style={styles.button} onPress={() => navigate("/")}>
         <Text style={styles.buttonText}>Go to Home</Text>
       </TouchableOpacity>
     </View>

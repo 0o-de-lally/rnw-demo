@@ -1,13 +1,13 @@
 import { render } from "vitest-browser-react";
 import { expect, test } from "vitest";
 import HomeScreen from "../src/screens/HomeScreen";
-import { NavigationContainer } from "@react-navigation/native";
+import { MemoryRouter } from "react-router-dom";
 
 test("home renders", async () => {
   const screen = render(
-    <NavigationContainer>
+    <MemoryRouter>
       <HomeScreen />
-    </NavigationContainer>,
+    </MemoryRouter>,
   );
 
   await expect.element(screen.getByText("Explorer")).toBeVisible();

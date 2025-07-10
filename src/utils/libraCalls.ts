@@ -2,7 +2,7 @@
 import { AccountAddress, addressFromString } from "open-libra-sdk";
 import { getConfig } from "../config/appConfig";
 
-export interface CommunityWallet {
+interface CommunityWallet {
   address: AccountAddress;
   isV8Authorized: boolean;
   isReauthProposed: boolean;
@@ -147,9 +147,7 @@ export async function getWalletBalance(
  * Fetch all data for all community wallets
  * @returns Array of CommunityWallet objects with complete information
  */
-export async function fetchAllCommunityWalletData(): Promise<
-  CommunityWallet[]
-> {
+async function _fetchAllCommunityWalletData(): Promise<CommunityWallet[]> {
   try {
     // First get all wallet addresses
     const walletAddresses = await getCommunityWallets();

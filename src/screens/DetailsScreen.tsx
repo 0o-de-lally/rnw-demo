@@ -1,25 +1,15 @@
 import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import type { StackNavigationProp } from "@react-navigation/stack";
-import type { RootStackParamList } from "../navigation/AppNavigator";
-
-type DetailsScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  "Details"
->;
+import { useNavigate } from "react-router-dom";
 
 const DetailsScreen = () => {
-  const navigation = useNavigation<DetailsScreenNavigationProp>();
+  const navigate = useNavigate();
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Details Screen</Text>
       <Text style={styles.subtitle}>URL path: /details</Text>
-      <Button
-        title="Go back to Home"
-        onPress={() => navigation.navigate("Home")}
-      />
+      <Button title="Go back to Home" onPress={() => navigate("/")} />
     </View>
   );
 };

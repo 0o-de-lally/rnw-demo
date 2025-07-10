@@ -3,7 +3,7 @@ import {
   logs,
   ps,
   upAll,
-  type IDockerComposeOptions,
+  IDockerComposeOptions,
 } from "docker-compose";
 import path from "path";
 import { execSync } from "child_process";

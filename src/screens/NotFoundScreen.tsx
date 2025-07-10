@@ -1,26 +1,26 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "../navigation/AppNavigator";
-
-type NotFoundScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  "NotFound"
->;
+import { useNavigate } from "react-router-dom";
 
 const NotFoundScreen = () => {
-  const navigation = useNavigation<NotFoundScreenNavigationProp>();
+  const navigate = useNavigate();
+
+  // If not already using a hash route, retry with hash
+  React.useEffect(() => {
+    if (!window.location.hash) {
+      // Rebuild the hash route from the current path
+      const hashUrl = `#${window.location.pathname}${window.location.search}${window.location.hash}`;
+      // Only retry if not already on a hash route
+      window.location.replace(hashUrl);
+    }
+  }, []);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>404</Text>
       <Text style={styles.subtitle}>Page Not Found</Text>
       <Text style={styles.message}>eek</Text>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("Home")}
-      >
+      <TouchableOpacity style={styles.button} onPress={() => navigate("/")}>
         <Text style={styles.buttonText}>Go to Home</Text>
       </TouchableOpacity>
     </View>

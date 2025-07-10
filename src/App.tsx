@@ -19,13 +19,23 @@ export default function App() {
         <div>window.location.href: <b>{window.location.href}</b></div>
         <div>USE_HASH_ROUTER: <b>{USE_HASH_ROUTER ? "true" : "false"}</b></div>
       </div>
-      <RouterComponent basename={basePath}>
-        <Routes>
-          <Route path="/" element={<HomeScreen />} />
-          <Route path="/details" element={<DetailsScreen />} />
-          <Route path="*" element={<NotFoundScreen />} />
-        </Routes>
-      </RouterComponent>
+      {USE_HASH_ROUTER ? (
+        <HashRouter>
+          <Routes>
+            <Route path="/" element={<HomeScreen />} />
+            <Route path="/details" element={<DetailsScreen />} />
+            <Route path="*" element={<NotFoundScreen />} />
+          </Routes>
+        </HashRouter>
+      ) : (
+        <BrowserRouter basename={basePath}>
+          <Routes>
+            <Route path="/" element={<HomeScreen />} />
+            <Route path="/details" element={<DetailsScreen />} />
+            <Route path="*" element={<NotFoundScreen />} />
+          </Routes>
+        </BrowserRouter>
+      )}
     </>
   );
 }

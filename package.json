@@ -14,7 +14,7 @@
     "lint:eslint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:tsc": "bunx tsc --noEmit",
     "lint:unused": "bunx ts-prune --ignore='.tsx' | tee /dev/stderr | (! grep -q .)",
-    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "lint:fix": "eslint ./src --ext .js,.jsx,.ts,.tsx --fix",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json}\"",
     "fix": "bun eslint . --fix && bun prettier --write \"**/*.{js,jsx,ts,tsx,json}\""

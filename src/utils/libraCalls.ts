@@ -147,7 +147,7 @@ export async function getWalletBalance(
  * Fetch all data for all community wallets
  * @returns Array of CommunityWallet objects with complete information
  */
-async function fetchAllCommunityWalletData(): Promise<
+async function _fetchAllCommunityWalletData(): Promise<
   CommunityWallet[]
 > {
   try {

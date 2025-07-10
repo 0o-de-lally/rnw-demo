@@ -1,14 +1,11 @@
 import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import type { StackNavigationProp } from "@react-navigation/stack";
-import type { RootStackParamList } from "../navigation/AppNavigator";
+import { useNavigate } from "react-router-dom";
 import LedgerInfoView from "../components/LedgerInfo";
 
-type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 
 const HomeScreen = () => {
-  const navigation = useNavigation<HomeScreenNavigationProp>();
+  const navigate = useNavigate();
 
   return (
     <View style={styles.container}>
@@ -18,7 +15,7 @@ const HomeScreen = () => {
 
       <Button
         title="Go to Details"
-        onPress={() => navigation.navigate("Details")}
+        onPress={() => navigate("/details")}
       />
     </View>
   );

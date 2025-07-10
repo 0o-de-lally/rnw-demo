@@ -17,12 +17,11 @@
     "fix": "bun eslint . --fix && bun prettier --write \"**/*.{js,jsx,ts,tsx,json}\""
   },
   "dependencies": {
-    "@react-navigation/native": "^7.1.14",
-    "@react-navigation/stack": "^7.4.2",
     "open-libra-sdk": "1.1.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-native-web": "^0.20"
+    "react-native-web": "^0.20",
+    "react-router-dom": "^7.6.3"
   },
   "devDependencies": {
     "@types/react-native": "^0.73.0",

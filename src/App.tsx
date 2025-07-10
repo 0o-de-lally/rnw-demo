@@ -5,7 +5,7 @@ import DetailsScreen from "./screens/DetailsScreen";
 import NotFoundScreen from "./screens/NotFoundScreen";
 import { USE_HASH_ROUTER } from "./config/routerMode";
 
-const basePath = import.meta.env.BASE_URL || "/rnw-demo/";
+const basePath = import.meta.env.BASE_URL || "/";
 const RouterComponent = USE_HASH_ROUTER ? HashRouter : BrowserRouter;
 
 export default function App() {

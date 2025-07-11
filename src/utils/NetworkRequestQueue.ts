@@ -9,7 +9,7 @@ interface InFlightRequest<T> {
 }
 
 class NetworkRequestQueue {
-  private queue: Map<RequestKey, InFlightRequest<any>> = new Map();
+  private queue: Map<RequestKey, InFlightRequest<unknown>> = new Map();
 
   // key: a string uniquely identifying the request (e.g. URL + params)
   // fn: a function that returns a Promise for the network request
@@ -18,7 +18,7 @@ class NetworkRequestQueue {
       // If already in flight, return the same promise
       const inFlight = this.queue.get(key)!;
       inFlight.count++;
-      return inFlight.promise;
+      return inFlight.promise as Promise<T>;
     }
     // Not in flight, start the request
     const promise = fn().finally(() => {

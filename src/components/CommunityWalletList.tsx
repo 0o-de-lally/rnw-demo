@@ -134,7 +134,8 @@ const CommunityWalletList: React.FC = () => {
 
       // Fetch wallet balance
       try {
-        const balance = await getWalletBalance(address);
+        const rawBalance = await getWalletBalance(address);
+        const balance = rawBalance != null ? rawBalance / 1_000_000 : null;
         updateWalletDetailAtIndex(index, {
           balance: balance,
           balanceLoading: false,
@@ -258,11 +259,16 @@ const CommunityWalletList: React.FC = () => {
     value: boolean | number | null,
     isLoading: boolean,
     error?: string,
+    isBalance?: boolean
   ) => {
     if (isLoading) return <ActivityIndicator size="small" color="#0088ff" />;
     if (error || value === null)
       return <Text style={tableStyles.errorCell}>n/a</Text>;
     if (typeof value === "boolean") return <Text>{value ? "Yes" : "No"}</Text>;
+    if (typeof value === "number" && isBalance) {
+      // Already scaled, just show 6 decimals
+      return <Text>{value.toLocaleString(undefined, { minimumFractionDigits: 6, maximumFractionDigits: 6 })}</Text>;
+    }
     if (typeof value === "number") return <Text>{value.toLocaleString()}</Text>;
     return <Text>{String(value)}</Text>;
   };
@@ -296,6 +302,7 @@ const CommunityWalletList: React.FC = () => {
           item.balance,
           item.balanceLoading,
           item.balanceError,
+          true // isBalance
         )}
       </View>
     </View>

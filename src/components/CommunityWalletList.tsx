@@ -35,7 +35,7 @@ const CommunityWalletList: React.FC = () => {
         setAddressesError(null);
         const addressList = await networkRequestQueue.enqueue(
           "communityWalletAddresses",
-          fetchCommunityWalletAddresses
+          fetchCommunityWalletAddresses,
         );
         if (addressList.length === 0) {
           setAddressesError("No community wallets found in the registry.");
@@ -86,7 +86,7 @@ const CommunityWalletList: React.FC = () => {
       try {
         const wallet = await networkRequestQueue.enqueue(
           `enhancedWallet:${address.toString()}`,
-          () => fetchEnhancedWallet(address)
+          () => fetchEnhancedWallet(address),
         );
         updateWalletDetailAtIndex(index, wallet);
       } catch (err) {
@@ -214,7 +214,7 @@ const CommunityWalletList: React.FC = () => {
     value: boolean | number | null,
     isLoading: boolean,
     error?: string,
-    isBalance?: boolean
+    isBalance?: boolean,
   ) => {
     if (isLoading) return <ActivityIndicator size="small" color="#0088ff" />;
     if (error || value === null)
@@ -222,7 +222,14 @@ const CommunityWalletList: React.FC = () => {
     if (typeof value === "boolean") return <Text>{value ? "Yes" : "No"}</Text>;
     if (typeof value === "number" && isBalance) {
       // Already scaled, just show 6 decimals
-      return <Text>{value.toLocaleString(undefined, { minimumFractionDigits: 6, maximumFractionDigits: 6 })}</Text>;
+      return (
+        <Text>
+          {value.toLocaleString(undefined, {
+            minimumFractionDigits: 6,
+            maximumFractionDigits: 6,
+          })}
+        </Text>
+      );
     }
     if (typeof value === "number") return <Text>{value.toLocaleString()}</Text>;
     return <Text>{String(value)}</Text>;
@@ -257,7 +264,7 @@ const CommunityWalletList: React.FC = () => {
           item.balance,
           item.balanceLoading,
           item.balanceError,
-          true // isBalance
+          true, // isBalance
         )}
       </View>
     </View>

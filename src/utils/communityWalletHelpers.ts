@@ -19,11 +19,15 @@ export interface EnhancedWallet {
   balanceLoading: boolean;
 }
 
-export async function fetchCommunityWalletAddresses(): Promise<AccountAddress[]> {
+export async function fetchCommunityWalletAddresses(): Promise<
+  AccountAddress[]
+> {
   return getCommunityWallets();
 }
 
-export async function fetchEnhancedWallet(address: AccountAddress): Promise<EnhancedWallet> {
+export async function fetchEnhancedWallet(
+  address: AccountAddress,
+): Promise<EnhancedWallet> {
   const wallet: EnhancedWallet = {
     address,
     isV8Authorized: null,

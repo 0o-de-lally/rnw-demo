@@ -18,7 +18,10 @@ export default function App() {
           <Menu />
           <Routes>
             <Route path="/" element={<HomeScreen />} />
-            <Route path="/community-wallets" element={<CommunityWalletList />} />
+            <Route
+              path="/community-wallets"
+              element={<CommunityWalletList />}
+            />
             <Route path="/details" element={<DetailsScreen />} />
             <Route path="*" element={<NotFoundScreen />} />
           </Routes>
@@ -28,7 +31,10 @@ export default function App() {
           <Menu />
           <Routes>
             <Route path="/" element={<HomeScreen />} />
-            <Route path="/community-wallets" element={<CommunityWalletList />} />
+            <Route
+              path="/community-wallets"
+              element={<CommunityWalletList />}
+            />
             <Route path="/details" element={<DetailsScreen />} />
             <Route path="*" element={<NotFoundScreen />} />
           </Routes>

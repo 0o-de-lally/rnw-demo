@@ -6,10 +6,7 @@ export const styles = StyleSheet.create({
     maxWidth: 800,
     backgroundColor: "#f5f5f5",
     borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
     marginVertical: 10,
   },
   title: {

@@ -7,31 +7,17 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { styles } from "../styles";
 import {
-  getCommunityWallets,
-  isWalletV8Authorized,
-  isReauthProposed,
-  getWalletBalance,
-} from "../utils/libraCalls";
+  fetchCommunityWalletAddresses,
+  fetchEnhancedWallet,
+  EnhancedWallet,
+} from "../utils/communityWalletHelpers";
+import { styles } from "../styles";
+import { networkRequestQueue } from "../utils/NetworkRequestQueue";
 import { AccountAddress } from "open-libra-sdk";
 
 type SortKey = "address" | "isV8Authorized" | "isReauthProposed" | "balance";
 type SortDirection = "asc" | "desc";
-
-// Enhanced wallet type to handle loading states and errors for individual fields
-interface EnhancedWallet {
-  address: AccountAddress;
-  isV8Authorized: boolean | null;
-  isV8AuthorizedError?: string;
-  isV8AuthorizedLoading: boolean;
-  isReauthProposed: boolean | null;
-  isReauthProposedError?: string;
-  isReauthProposedLoading: boolean;
-  balance: number | null;
-  balanceError?: string;
-  balanceLoading: boolean;
-}
 
 const CommunityWalletList: React.FC = () => {
   const [addresses, setAddresses] = useState<AccountAddress[]>([]);
@@ -47,9 +33,10 @@ const CommunityWalletList: React.FC = () => {
       try {
         setAddressesLoading(true);
         setAddressesError(null);
-
-        const addressList = await getCommunityWallets();
-
+        const addressList = await networkRequestQueue.enqueue(
+          "communityWalletAddresses",
+          fetchCommunityWalletAddresses
+        );
         if (addressList.length === 0) {
           setAddressesError("No community wallets found in the registry.");
         } else {
@@ -75,7 +62,6 @@ const CommunityWalletList: React.FC = () => {
         setAddressesLoading(false);
       }
     };
-
     loadAddresses();
   }, []);
 
@@ -83,14 +69,12 @@ const CommunityWalletList: React.FC = () => {
   useEffect(() => {
     if (addresses.length === 0) return;
 
-    // Helper function to update a specific wallet's data
     const updateWalletDetailAtIndex = (
       walletIndex: number,
       updates: Partial<EnhancedWallet>,
     ) => {
       setWallets((prevWallets) => {
         const newWallets = [...prevWallets];
-        // Ensure the wallet at walletIndex exists before trying to update
         if (newWallets[walletIndex]) {
           newWallets[walletIndex] = { ...newWallets[walletIndex], ...updates };
         }
@@ -98,51 +82,22 @@ const CommunityWalletList: React.FC = () => {
       });
     };
 
-    // Load details for each wallet in parallel
     addresses.forEach(async (address, index) => {
-      // Fetch v8 authorization status
       try {
-        const isV8Auth = await isWalletV8Authorized(address);
-        updateWalletDetailAtIndex(index, {
-          isV8Authorized: isV8Auth,
-          isV8AuthorizedLoading: false,
-        });
+        const wallet = await networkRequestQueue.enqueue(
+          `enhancedWallet:${address.toString()}`,
+          () => fetchEnhancedWallet(address)
+        );
+        updateWalletDetailAtIndex(index, wallet);
       } catch (err) {
-        console.error(`Error checking v8 authorization for ${address}:`, err);
+        console.error(`Error fetching wallet state for ${address}:`, err);
         updateWalletDetailAtIndex(index, {
           isV8Authorized: null,
           isV8AuthorizedError: String(err),
           isV8AuthorizedLoading: false,
-        });
-      }
-
-      // Fetch reauthorization proposal status
-      try {
-        const isReauth = await isReauthProposed(address);
-        updateWalletDetailAtIndex(index, {
-          isReauthProposed: isReauth,
-          isReauthProposedLoading: false,
-        });
-      } catch (err) {
-        console.error(`Error checking reauth proposal for ${address}:`, err);
-        updateWalletDetailAtIndex(index, {
           isReauthProposed: null,
           isReauthProposedError: String(err),
           isReauthProposedLoading: false,
-        });
-      }
-
-      // Fetch wallet balance
-      try {
-        const rawBalance = await getWalletBalance(address);
-        const balance = rawBalance != null ? rawBalance / 1_000_000 : null;
-        updateWalletDetailAtIndex(index, {
-          balance: balance,
-          balanceLoading: false,
-        });
-      } catch (err) {
-        console.error(`Error fetching balance for ${address}:`, err);
-        updateWalletDetailAtIndex(index, {
           balance: null,
           balanceError: String(err),
           balanceLoading: false,
